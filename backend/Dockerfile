@@ -1,11 +1,23 @@
-DATABASE_HOST=postgres
+# Sử dụng Node 18
+FROM node:18
 
-DATABASE_PORT=5432
+# Tạo thư mục làm việc
+WORKDIR /app
 
-DATABASE_USER=postgres
+# Copy package.json và package-lock.json
+COPY package*.json ./
 
-DATABASE_PASS=postgres
+# Cài dependencies (chỉ production)
+RUN npm install --only=production
 
-DATABASE_NAME=cafe_pos_dev
+# Copy toàn bộ source code
+COPY . .
 
-JWT_SECRET=your_jwt_secret
+# Build project
+RUN npm run build
+
+# Expose port (giống main.ts)
+EXPOSE 4000
+
+# Start app
+CMD ["npm", "run", "start:prod"]
